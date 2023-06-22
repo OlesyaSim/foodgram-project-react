@@ -29,7 +29,7 @@ from .serializers import (
     UserFoodgramSerializer,
     ChangeRecipeSerializer,
     RecipeOfSubscribersSerializer)
-from users.models import Subscriptions, UserFoodgram
+from users.models import Subscriptions
 
 User = get_user_model()
 
@@ -43,8 +43,9 @@ class UserFoodgramViewSet(UserViewSet):
             permission_classes=(IsAuthenticated,)
             )
     def subscriptions(self, request):
-        subscriptions = User.objects.filter(subscribers__user=
-                                            self.request.user)
+        subscriptions = User.objects.filter(
+            subscribers__user=self.request.user
+        )
         page = self.paginate_queryset(subscriptions)
         if page is not None:
             serializer = SubscriptionsSerializer(page, many=True,

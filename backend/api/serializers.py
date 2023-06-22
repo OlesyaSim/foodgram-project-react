@@ -12,7 +12,7 @@ from recipes.models import (
     Recipe,
     Tag,
 )
-from users.models import Subscriptions, UserFoodgram
+from users.models import Subscriptions
 
 
 User = get_user_model()
