@@ -5,7 +5,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'super_secret_key')
 
-
 DEBUG = int(os.getenv('DEBUG', 0))
 
 ALLOWED_HOSTS = ['*']
@@ -132,7 +131,7 @@ DJOSER = {
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
     'SERIALIZERS': {
-        'user_create': 'api.serializers.UserCreateSerializer',
+        'user_create': 'users.serializers.UserCreateSerializer',
         'user': 'api.serializers.UserFoodgramSerializer',
         'current_user': 'api.serializers.UserFoodgramSerializer',
 

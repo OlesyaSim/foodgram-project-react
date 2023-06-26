@@ -12,7 +12,6 @@ from recipes.models import (
 )
 from users.serializers import (
     Base64ImageField,
-    UserCreateSerializer,
     UserFoodgramSerializer,
 )
 

@@ -53,9 +53,9 @@ class Tag(Model):
         verbose_name_plural = 'Тэги'
         ordering = ('name',)
         constraints = (UniqueConstraint(
-                fields=('name', 'color'),
-                name='unique_for_tag'
-            ),
+            fields=('name', 'color'),
+            name='unique_for_tag'
+        ),
         )
 
     def __str__(self) -> str:
