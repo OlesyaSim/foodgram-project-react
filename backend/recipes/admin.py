@@ -26,4 +26,8 @@ class ResipeAdmin(admin.ModelAdmin):
         return obj.in_favorites.count()
 
 
-admin.site.register(Tag)
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'slug')
+    search_fields = ('name', 'slug')
+    list_filter = ('name', 'slug')

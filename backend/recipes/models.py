@@ -37,6 +37,7 @@ class Tag(Model):
     color = RGBColorField(colors=[GREEN_COLOR, RED_COLOR, YELLOW_COLOR],
                           max_length=10,
                           verbose_name="цвет тэга",
+                          unique=True,
                           blank=False,
                           )
     slug = SlugField(
@@ -51,6 +52,11 @@ class Tag(Model):
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
         ordering = ('name',)
+        constraints = (UniqueConstraint(
+                fields=('name', 'color'),
+                name='unique_for_tag'
+            ),
+        )
 
     def __str__(self) -> str:
         return f'{self.name} (цвет: {self.color})'

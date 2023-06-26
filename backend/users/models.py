@@ -1,9 +1,9 @@
 import re
 
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.functions import Length
-from django.core.exceptions import ValidationError
 from django.db.models import (
     CASCADE,
     DateTimeField,
@@ -22,6 +22,8 @@ def validate_user_name(value):
         raise ValidationError(
             u'%s Не заполнено обязательное поле или оно заполнено некорректно'
         )
+    if value == 'me':
+        raise ValidationError('Нельзя использовать имя me')
 
 
 class UserFoodgram(AbstractUser):
@@ -49,6 +51,9 @@ class UserFoodgram(AbstractUser):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
         ordering = ('id',)
+
+    def __str__(self) -> str:
+        return f'{self.username}'
 
 
 class Subscriptions(Model):
