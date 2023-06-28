@@ -180,10 +180,10 @@ class Ingredients(Model):
     )
     amount = PositiveIntegerField(
         verbose_name='Количество',
-        validators=(
-            MinValueValidator(1,
-                              'Количество ингредиента должно быть больше 0.',
-                              ),
+        validators=(MinValueValidator(
+            1,
+            'Количество ингредиента должно быть больше 0.',
+        ),
         )
     )
 

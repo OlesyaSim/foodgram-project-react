@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
-from .utils import ingredients_validate
+from .validators import ingredients_validate
 from recipes.models import (
     Cart,
     FavoritesRecipes,
@@ -14,7 +15,6 @@ from users.serializers import (
     Base64ImageField,
     UserFoodgramSerializer,
 )
-
 
 User = get_user_model()
 
@@ -41,7 +41,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     is_in_shopping_cart = serializers.SerializerMethodField()
     author = UserFoodgramSerializer(read_only=True, many=False)
     ingredients = serializers.SerializerMethodField()
-    tags = TagSerializer(read_only=True, many=True)
+    tags = TagSerializer(read_only=True, many=True, )
     image = Base64ImageField(required=False, allow_null=True)
 
     class Meta:
@@ -86,8 +86,10 @@ class ChangeRecipeSerializer(serializers.ModelSerializer):
     """ Создание, изменение рецептов. Проверка тегов на уникальность в
     моделях + их обязательность заполнения. Проверка времени приготовления
     в моделях."""
-    tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(),
-                                              many=True)
+    tags = serializers.PrimaryKeyRelatedField(
+        queryset=Tag.objects.all(),
+        many=True,
+        required=True)
     ingredients = ChangeIngredientsSerializer(many=True)
     image = Base64ImageField(required=False, allow_null=True)
 
@@ -102,22 +104,33 @@ class ChangeRecipeSerializer(serializers.ModelSerializer):
         )
         model = Recipe
 
+    def validate_cooking_time(self, value):
+        if value < 1:
+            raise ValidationError('Время должно быть больше 0')
+        return value
+
+    def validate_tags_unique(self, value):
+        return set(value)
+
+    def validate(self, data):
+        tags = data.get('tags')
+        if not tags:
+            raise ValidationError('Необходимо указать хотя бы один тэг')
+        return data
+
     def to_representation(self, instance):
         request = self.context.get('request')
         context = {'request': request}
-        return RecipeSerializer(
-            instance,
-            context=context).data
+        return RecipeSerializer(instance, context=context).data
 
     def create(self, validate_data):
         ingredients = validate_data.pop('ingredients')
         tags = validate_data.pop('tags')
-        recipe_obj = Recipe.objects.create(author=self.context.get(
-            'request').user, **validate_data)
+        recipe_obj = Recipe.objects.create(
+            author=self.context.get('request').user, **validate_data)
         list_ingredients = ingredients_validate(ingredients, recipe_obj)
         Ingredients.objects.bulk_create(list_ingredients)
-        for tag in tags:
-            recipe_obj.tags.add(tag)
+        recipe_obj.tags.set(tags)
         return recipe_obj
 
     def update(self, obj, validate_data):
@@ -127,8 +140,7 @@ class ChangeRecipeSerializer(serializers.ModelSerializer):
         tags = validate_data.pop('tags')
         list_ingredients = ingredients_validate(ingredients, obj)
         Ingredients.objects.bulk_create(list_ingredients)
-        for tag in tags:
-            obj.tags.add(tag)
+        obj.tags.set(tags)
         return super().update(obj, validate_data)
 
 
@@ -155,6 +167,7 @@ class IngredientsSerializer(serializers.ModelSerializer):
 
 class FavoritesRecipesSerializer(serializers.ModelSerializer):
     """Избранные рецепты."""
+
     class Meta:
         fields = ('recipe', 'user', 'date_added')
         model = FavoritesRecipes

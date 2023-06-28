@@ -10,7 +10,6 @@ from .views import (
     RecipeViewSet,
     TagViewSet,
 )
-from users.urls import v1_router_users
 
 v1_router = DefaultRouter()
 
@@ -25,9 +24,8 @@ v1_router.register('favorite',
 v1_router.register('ingredients', ProductViewSet, basename='ingredients')
 
 urlpatterns = [
-    path('auth/', include('djoser.urls.authtoken')),
     path('', include(v1_router.urls)),
-    path('', include(v1_router_users.urls)),
+    path('', include('users.urls'))
 ]
 
 if settings.DEBUG:

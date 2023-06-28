@@ -3,10 +3,11 @@ import base64
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from .models import Subscriptions
-from api.pagination import RECIPES_LIMIT
 from recipes.models import Recipe
+from api.pagination import RecipePagination
 
 
 User = get_user_model()
@@ -55,6 +56,16 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+    def validate_username(self, value):
+        if value == 'me':
+            raise ValidationError('Нельзя использовать имя me')
+        if User.objects.filter(username=value).exists():
+            raise ValidationError("Такое имя уже зарегистрировано")
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise ValidationError("Такой email уже зарегистрирован")
+
 
 class SubscriptionsSerializer(serializers.ModelSerializer):
     """Подписчики."""
@@ -81,7 +92,7 @@ class SubscriptionsSerializer(serializers.ModelSerializer):
 
     def get_recipes(self, obj):
         recipes = Recipe.objects.filter(author=obj, )
-        recipes = recipes[:int(RECIPES_LIMIT)]
+        recipes = recipes[:int(RecipePagination.page_size)]
         return RecipeOfSubscribersSerializer(recipes, many=True).data
 
     def get_recipes_count(self, obj):
