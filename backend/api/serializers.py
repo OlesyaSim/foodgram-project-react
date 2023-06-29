@@ -108,7 +108,7 @@ class ChangeRecipeSerializer(serializers.ModelSerializer):
     def validate(self, data):
         tags = data.get('tags')
         if not tags:
-            raise ValidationError('Необходимо указать хотя бы один тэг')
+            raise ValidationError('Укажите тэг')
         return data
 
     def to_representation(self, instance):
