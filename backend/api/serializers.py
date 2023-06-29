@@ -2,19 +2,11 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from recipes.models import (Cart, FavoritesRecipes, Ingredients, Product,
+                            Recipe, Tag)
+from users.serializers import Base64ImageField, UserFoodgramSerializer
+
 from .validators import ingredients_validate
-from recipes.models import (
-    Cart,
-    FavoritesRecipes,
-    Ingredients,
-    Product,
-    Recipe,
-    Tag,
-)
-from users.serializers import (
-    Base64ImageField,
-    UserFoodgramSerializer,
-)
 
 User = get_user_model()
 
@@ -60,8 +52,10 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         user = self.context.get('request').user
-        return (user.is_authenticated and obj.in_favorites.filter(
-            user=user).exists())
+        return (
+                user.is_authenticated and
+                obj.in_favorites.filter(user=user).exists()
+        )
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context.get('request').user
@@ -83,13 +77,12 @@ class ChangeIngredientsSerializer(serializers.ModelSerializer):
 
 
 class ChangeRecipeSerializer(serializers.ModelSerializer):
-    """ Создание, изменение рецептов. Проверка тегов на уникальность в
-    моделях + их обязательность заполнения. Проверка времени приготовления
-    в моделях."""
+    """ Создание, изменение рецептов."""
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
         many=True,
-        required=True)
+        required=True
+    )
     ingredients = ChangeIngredientsSerializer(many=True)
     image = Base64ImageField(required=False, allow_null=True)
 
@@ -127,7 +120,8 @@ class ChangeRecipeSerializer(serializers.ModelSerializer):
         ingredients = validate_data.pop('ingredients')
         tags = validate_data.pop('tags')
         recipe_obj = Recipe.objects.create(
-            author=self.context.get('request').user, **validate_data)
+            author=self.context.get('request').user, **validate_data
+        )
         list_ingredients = ingredients_validate(ingredients, recipe_obj)
         Ingredients.objects.bulk_create(list_ingredients)
         recipe_obj.tags.set(tags)

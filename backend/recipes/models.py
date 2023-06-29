@@ -1,22 +1,10 @@
+from colorful.fields import RGBColorField
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
-from django.db.models import (
-    CASCADE,
-    CharField,
-    CheckConstraint,
-    DateTimeField,
-    ForeignKey,
-    ImageField,
-    ManyToManyField,
-    Model,
-    PositiveIntegerField,
-    Q,
-    SET_NULL,
-    SlugField,
-    TextField,
-    UniqueConstraint,
-)
-from colorful.fields import RGBColorField
+from django.db.models import (CASCADE, CharField, CheckConstraint,
+                              DateTimeField, ForeignKey, ImageField,
+                              ManyToManyField, Model, PositiveIntegerField, Q,
+                              SET_NULL, SlugField, TextField, UniqueConstraint)
 
 User = get_user_model()
 
@@ -34,12 +22,13 @@ class Tag(Model):
         unique=True,
         blank=False,
     )
-    color = RGBColorField(colors=[GREEN_COLOR, RED_COLOR, YELLOW_COLOR],
-                          max_length=10,
-                          verbose_name="цвет тэга",
-                          unique=True,
-                          blank=False,
-                          )
+    color = RGBColorField(
+        colors=[GREEN_COLOR, RED_COLOR, YELLOW_COLOR],
+        max_length=10,
+        verbose_name="цвет тэга",
+        unique=True,
+        blank=False,
+    )
     slug = SlugField(
         verbose_name='Слаг тэга латинскими буквами',
         max_length=150,
@@ -52,10 +41,11 @@ class Tag(Model):
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
         ordering = ('name',)
-        constraints = (UniqueConstraint(
-            fields=('name', 'color'),
-            name='unique_for_tag'
-        ),
+        constraints = (
+            UniqueConstraint(
+                fields=('name', 'color'),
+                name='unique_for_tag'
+            ),
         )
 
     def __str__(self) -> str:

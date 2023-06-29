@@ -1,7 +1,7 @@
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from .views import SubscriptionsViewSet, UserFoodgramViewSet
-from django.urls import path, include
 
 v1_router_users = DefaultRouter()
 

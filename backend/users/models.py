@@ -3,15 +3,8 @@ import re
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import CASCADE, DateTimeField, F, ForeignKey, Model, Q
 from django.db.models.functions import Length
-from django.db.models import (
-    CASCADE,
-    DateTimeField,
-    F,
-    ForeignKey,
-    Model,
-    Q,
-)
 
 models.CharField.register_lookup(Length)
 
@@ -22,30 +15,37 @@ def validate_user_name(value):
         raise ValidationError(
             u'%s Не заполнено обязательное поле или оно заполнено некорректно'
         )
-    if value == 'me':
-        raise ValidationError('Нельзя использовать имя me')
+    if value.lower() == 'me':
+        raise ValidationError(
+            'Нельзя использовать это имя, выберите другое'
+        )
 
 
 class UserFoodgram(AbstractUser):
     """Пользователи."""
-    username = models.CharField(verbose_name='Уникальное имя пользователя',
-                                max_length=150,
-                                unique=True,
-                                validators=[validate_user_name],
-                                )
+    username = models.CharField(
+        verbose_name='Уникальное имя пользователя',
+        max_length=150,
+        unique=True,
+        validators=[validate_user_name],
+    )
 
-    password = models.CharField(verbose_name='Пароль',
-                                max_length=150,
-                                )
+    password = models.CharField(
+        verbose_name='Пароль',
+        max_length=150,
+    )
 
     email = models.EmailField(unique=True)
 
-    first_name = models.CharField(verbose_name='Имя',
-                                  max_length=150,
-                                  )
+    first_name = models.CharField(
+        verbose_name='Имя',
+        max_length=150,
+    )
 
-    last_name = models.CharField(verbose_name='Фамилия',
-                                 max_length=150)
+    last_name = models.CharField(
+        verbose_name='Фамилия',
+        max_length=150
+    )
 
     class Meta:
         verbose_name = 'Пользователь'

@@ -1,15 +1,10 @@
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (
-    CartViewSet,
-    FavoritesRecipesViewSet,
-    ProductViewSet,
-    RecipeViewSet,
-    TagViewSet,
-)
+from .views import (CartViewSet, FavoritesRecipesViewSet, ProductViewSet,
+                    RecipeViewSet, TagViewSet)
 
 v1_router = DefaultRouter()
 
@@ -25,7 +20,6 @@ v1_router.register('ingredients', ProductViewSet, basename='ingredients')
 
 urlpatterns = [
     path('', include(v1_router.urls)),
-    path('', include('users.urls'))
 ]
 
 if settings.DEBUG:

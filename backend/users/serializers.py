@@ -5,10 +5,10 @@ from django.core.files.base import ContentFile
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Subscriptions
-from recipes.models import Recipe
 from api.pagination import RecipePagination
+from recipes.models import Recipe
 
+from .models import Subscriptions
 
 User = get_user_model()
 
@@ -57,8 +57,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return user
 
     def validate_username(self, value):
-        if value == 'me':
-            raise ValidationError('Нельзя использовать имя me')
+        if value.lower() == 'me':
+            raise ValidationError(
+                'Нельзя использовать это имя, выберите другое'
+            )
         if User.objects.filter(username=value).exists():
             raise ValidationError("Такое имя уже зарегистрировано")
 
@@ -114,9 +116,10 @@ class RecipeOfSubscribersSerializer(serializers.ModelSerializer):
     image = Base64ImageField(required=False, allow_null=True)
 
     class Meta:
-        fields = ('id',
-                  'name',
-                  'image',
-                  'cooking_time',
-                  )
+        fields = (
+            'id',
+            'name',
+            'image',
+            'cooking_time',
+        )
         model = Recipe

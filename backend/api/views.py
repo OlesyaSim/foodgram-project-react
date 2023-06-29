@@ -3,33 +3,26 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .filters import RecipesFilter, ProductSearchFilter
-from .pagination import RecipePagination
-from .permissions import IsAuthorOrReadOnly
-from .serializers import (
-    CartSerializer,
-    ChangeRecipeSerializer,
-    FavoritesRecipesSerializer,
-    ProductSerializer,
-    RecipeSerializer,
-    TagSerializer
-)
-from .validators import list_shopping_filename
 from recipes.models import (
-    Cart,
-    FavoritesRecipes,
-    Ingredients,
-    Recipe,
-    Product,
-    Tag
+    Cart, FavoritesRecipes, Ingredients, Product,
+    Recipe, Tag
 )
 from users.serializers import RecipeOfSubscribersSerializer
 
+from .filters import ProductSearchFilter, RecipesFilter
+from .pagination import RecipePagination
+from .permissions import IsAuthorOrReadOnly
+from .serializers import (
+    CartSerializer, ChangeRecipeSerializer,
+    FavoritesRecipesSerializer, ProductSerializer,
+    RecipeSerializer, TagSerializer
+)
+from .validators import list_shopping_filename
 
 User = get_user_model()
 
