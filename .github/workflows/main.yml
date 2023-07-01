@@ -70,7 +70,7 @@ jobs:
             sudo docker rmi olesimka/infra-backend:latest
             rm .env
             touch .env
-            echo SECRET_KEY=${{ secrets.SECRET_KEY }} > .env
+            echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
             echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
@@ -81,8 +81,7 @@ jobs:
             sudo docker-compose up -d
             sudo docker-compose exec -T backend python manage.py collectstatic --no-input
             sudo docker-compose exec backend python manage.py migrate
-            sudo docker system prune -af
-            
+                 
 
   send_message:
     runs-on: ubuntu-latest
