@@ -8,20 +8,16 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from recipes.models import (
-    Cart, FavoritesRecipes, Ingredients, Product,
-    Recipe, Tag
-)
+from recipes.models import (Cart, FavoritesRecipes, Ingredients, Product,
+                            Recipe, Tag)
 from users.serializers import RecipeOfSubscribersSerializer
 
 from .filters import ProductSearchFilter, RecipesFilter
 from .pagination import RecipePagination
 from .permissions import IsAuthorOrReadOnly
-from .serializers import (
-    CartSerializer, ChangeRecipeSerializer,
-    FavoritesRecipesSerializer, ProductSerializer,
-    RecipeSerializer, TagSerializer
-)
+from .serializers import (CartSerializer, ChangeRecipeSerializer,
+                          FavoritesRecipesSerializer, ProductSerializer,
+                          RecipeSerializer, TagSerializer)
 from .validators import list_shopping_filename
 
 User = get_user_model()
@@ -73,13 +69,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
             serializer = RecipeOfSubscribersSerializer(recipe)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        elif request.method == 'DELETE':
-            if not exist_rel:
-                return Response({'detail': 'Такого рецепта нет в списке '
-                                           'покупок'},
-                                status=status.HTTP_400_BAD_REQUEST)
-            exist_rel.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        if not exist_rel:
+            return Response({'detail': 'Такого рецепта нет в списке '
+                                       'покупок'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        exist_rel.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['get'], detail=False,
             url_path='download_shopping_cart', )
@@ -132,13 +128,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
             serializer = RecipeOfSubscribersSerializer(recipe)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        elif request.method == 'DELETE':
-            if not exist_rel:
-                return Response({'detail': 'Ошибка удаления рецепта из '
-                                           'избранного'},
-                                status=status.HTTP_400_BAD_REQUEST)
-            exist_rel.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        if not exist_rel:
+            return Response({'detail': 'Ошибка удаления рецепта из '
+                                       'избранного'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        exist_rel.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class FavoritesRecipesViewSet(viewsets.ModelViewSet):
