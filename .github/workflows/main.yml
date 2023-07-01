@@ -83,7 +83,6 @@ jobs:
             sudo docker-compose exec -T backend python manage.py migrate
             sudo docker-compose exec -T backend python manage.py load_data
 
-                 
 
   send_message:
     runs-on: ubuntu-latest

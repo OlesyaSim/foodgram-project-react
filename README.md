@@ -7,16 +7,20 @@ REST API для  Foodgram Создан на основе библиотеки Dj
 Foodgram - это «Продуктовый помощник»: сайт, на котором пользователи могут публиковать рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. Сервис «Список покупок» позволяет пользователям создавать список продуктов, которые нужно купить для приготовления выбранных блюд. 
 
 ### Посмотреть проект: 
-http://127.0.0.1:8000/api/
+http://51.250.93.22/recipes
 
-http://127.0.0.1:8000/admin/
+http://51.250.93.22/admin/
+
+логин: admin
+
+пароль: admin
 
 ### Инструкция по развертыванию
-docker-compose exec web python manage.py migrate 
+docker-compose exec backend python manage.py migrate 
 
-docker-compose exec web python manage.py createsuperuser
+docker-compose exec backend python manage.py createsuperuser
 
-docker-compose exec web python manage.py collectstatic --no-input 
+docker-compose exec backend python manage.py collectstatic --no-input 
 
 ### Используемые технологии
 
