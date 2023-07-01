@@ -30,6 +30,8 @@ services:
     image: olesimka/infra-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
+    depends_on:
+      - backend
   nginx:
     image: nginx:1.19.3
     ports:
@@ -40,5 +42,9 @@ services:
       - ../docs/:/usr/share/nginx/html/api/docs/
       - static_value:/var/html/static/
       - media_value:/var/html/media/
+    restart: always
+    depends_on:
+      - frontend
+
 
 
