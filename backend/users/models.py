@@ -1,24 +1,11 @@
-import re
-
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import CASCADE, DateTimeField, F, ForeignKey, Model, Q
 from django.db.models.functions import Length
 
+from .validators import validate_user_name
+
 models.CharField.register_lookup(Length)
-
-
-def validate_user_name(value):
-    reg = re.compile(r'^[\w.@+-]+\Z')
-    if not reg.match(value):
-        raise ValidationError(
-            u'%s Не заполнено обязательное поле или оно заполнено некорректно'
-        )
-    if value.lower() == 'me':
-        raise ValidationError(
-            'Нельзя использовать это имя, выберите другое'
-        )
 
 
 class UserFoodgram(AbstractUser):
