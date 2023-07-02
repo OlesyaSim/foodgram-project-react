@@ -1,5 +1,5 @@
 ### Статус работы workflow
-![example workflow](https://github.com/OlesyaSim/foodgram-project-react/actions/workflows/foodgram-project-react.yml/badge.svg)
+![example workflow](https://github.com/OlesyaSim/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
 ### Описание
 REST API для  Foodgram Создан на основе библиотеки Django REST Framework (DRF)
