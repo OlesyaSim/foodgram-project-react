@@ -2,6 +2,7 @@ import base64
 
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
+from djoser.serializers import TokenCreateSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -112,6 +113,12 @@ class Base64ImageField(serializers.ImageField):
             ext = format.split('/')[-1]
             data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
         return super().to_internal_value(data)
+
+
+class UserTokenCreateSerializer(TokenCreateSerializer):
+    def validate(self, attrs):
+        attrs["email"] = attrs["email"].lower()
+        return super(UserTokenCreateSerializer, self).validate(attrs)
 
 
 class RecipeOfSubscribersSerializer(serializers.ModelSerializer):

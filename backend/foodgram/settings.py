@@ -65,15 +65,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+#         'NAME': os.getenv('DB_NAME'),
+#         'USER': os.getenv('POSTGRES_USER'),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+#         'HOST': os.getenv('DB_HOST'),
+#         'PORT': os.getenv('DB_PORT')
+#     }
+# }
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT')
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -95,7 +101,6 @@ AUTH_PASSWORD_VALIDATORS = [
                 '.NumericPasswordValidator',
     },
 ]
-
 
 LANGUAGE_CODE = 'ru-RU'
 
@@ -136,8 +141,10 @@ DJOSER = {
     },
     'SERIALIZERS': {
         'user_create': 'users.serializers.UserCreateSerializer',
-        'user': 'api.serializers.UserFoodgramSerializer',
-        'current_user': 'api.serializers.UserFoodgramSerializer',
+        'user': 'users.serializers.UserFoodgramSerializer',
+        'current_user': 'users.serializers.UserFoodgramSerializer',
+        'token_create': 'users.serializers.UserTokenCreateSerializer',
+        'login': 'users.serializers.UserTokenCreateSerializer',
 
     }
 }
