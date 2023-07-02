@@ -94,7 +94,10 @@ class ChangeRecipeSerializer(serializers.ModelSerializer):
             'cooking_time',
         )
         model = Recipe
-
+    def validate_name(self, value):
+        if Recipe.objects.filter(name__iexact = value).exists():
+            raise ValidationError('Такой рецепт уже есть')
+        return value
     def validate_cooking_time(self, value):
         if value < 1:
             raise ValidationError('Время должно быть больше 0')
@@ -107,6 +110,13 @@ class ChangeRecipeSerializer(serializers.ModelSerializer):
         tags = data.get('tags')
         if not tags:
             raise ValidationError('Укажите тэг')
+        ingredients = [
+            item['ingredient'] for item in data['ingredients']]
+        if len(ingredients) > len(set(ingredients)):
+            raise serializers.ValidationError(
+                'Нельзя один и тот же ингредиент добавить несколько раз'
+            )
+
         return data
 
     def to_representation(self, instance):
