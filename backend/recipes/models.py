@@ -99,7 +99,7 @@ class Recipe(Model):
     name = CharField(
         verbose_name='Название блюда',
         max_length=150,
-        blank=False
+        unique=True,
     )
     image = ImageField(
         verbose_name='Фото блюда',

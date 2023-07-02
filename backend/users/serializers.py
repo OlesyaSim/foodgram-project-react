@@ -57,7 +57,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return user
 
     def validate_username(self, value):
-        if value.lower() == 'me':
+        value=value.lower()
+        if value == 'me':
             raise ValidationError(
                 'Нельзя использовать это имя, выберите другое'
             )
@@ -66,7 +67,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return value
 
     def validate_email(self, value):
-        if User.objects.filter(email=value.lower()).exists():
+        value = value.lower()
+        if User.objects.filter(email=value).exists():
             raise ValidationError("Такой email уже зарегистрирован")
         return value
 
