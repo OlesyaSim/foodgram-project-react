@@ -113,7 +113,7 @@ class ChangeRecipeSerializer(serializers.ModelSerializer):
         if not tags:
             raise ValidationError('Укажите тэг')
         ingredients = [
-            item['ingredient'] for item in data['ingredients']]
+            item['id'] for item in data['ingredients']]
         if len(ingredients) > len(set(ingredients)):
             raise serializers.ValidationError(
                 'Нельзя один и тот же ингредиент добавить несколько раз'
