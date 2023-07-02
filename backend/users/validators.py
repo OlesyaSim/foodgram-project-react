@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 def validate_user_name(value):
     reg = re.compile(r'^[\w.@+-]+\Z')
     if not reg.match(value):
