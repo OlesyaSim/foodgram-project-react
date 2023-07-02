@@ -6,7 +6,7 @@ from djoser.serializers import TokenCreateSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from api.pagination import RecipePagination
+from api.pagination import RecipeSubscribePagination
 from recipes.models import Recipe
 
 from .models import Subscriptions
@@ -98,8 +98,8 @@ class SubscriptionsSerializer(serializers.ModelSerializer):
             user=user, author=obj).exists())
 
     def get_recipes(self, obj):
-        recipes = Recipe.objects.filter(author=obj, )
-        recipes = recipes[:int(RecipePagination.page_size)]
+        recipes = Recipe.objects.filter(author=obj,)
+        recipes = recipes[:int(RecipeSubscribePagination.page_size)]
         return RecipeOfSubscribersSerializer(recipes, many=True).data
 
     def get_recipes_count(self, obj):
