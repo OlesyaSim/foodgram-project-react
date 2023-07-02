@@ -96,8 +96,18 @@ class ChangeRecipeSerializer(serializers.ModelSerializer):
         model = Recipe
 
     def validate_name(self, value):
-        if Recipe.objects.filter(name__iexact=value).exists():
-            raise ValidationError('Такой рецепт уже есть')
+        if self.instance is None:
+            if Recipe.objects.filter(
+                    name__iexact=value
+            ).exists():
+                raise ValidationError('Такой рецепт уже есть')
+        else:
+            if Recipe.objects.filter(
+                    name__iexact=value,
+                    id=self.instance.id).exclude(
+                id=self.instance.id
+            ).exists():
+                raise ValidationError('Такой рецепт уже есть')
         return value
 
     def validate_cooking_time(self, value):

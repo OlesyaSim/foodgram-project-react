@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'super_secret_key')
 
-DEBUG = int(os.getenv('DEBUG', False))
+DEBUG = int(os.getenv('DEBUG', 1))
 
 ALLOWED_HOSTS = ['*']
 
@@ -75,7 +75,7 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT')
     }
 }
-
+#
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
