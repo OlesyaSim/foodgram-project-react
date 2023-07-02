@@ -116,6 +116,7 @@ class Base64ImageField(serializers.ImageField):
 
 
 class UserTokenCreateSerializer(TokenCreateSerializer):
+    """Приводит email к нижнему регистру."""
     def validate(self, attrs):
         attrs["email"] = attrs["email"].lower()
         return super(UserTokenCreateSerializer, self).validate(attrs)

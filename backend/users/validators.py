@@ -14,5 +14,4 @@ def validate_user_name(value):
         raise ValidationError(
             'Нельзя использовать это имя, выберите другое'
         )
-
     return value

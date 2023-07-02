@@ -26,8 +26,9 @@ class UserFoodgramViewSet(UserViewSet):
             subscribers__user=self.request.user
         )
         page = self.paginate_queryset(subscriptions)
-        serializer = SubscriptionsSerializer(page, many=True,
-                                             context={'request': request})
+        serializer = SubscriptionsSerializer(
+            page, many=True, context={'request': request}
+        )
         return self.get_paginated_response(serializer.data)
 
     @action(methods=['delete', 'post'],
@@ -61,9 +62,10 @@ class UserFoodgramViewSet(UserViewSet):
             subscribe_obj = Subscriptions.objects.filter(user=user,
                                                          author=author)
             if not subscribe_obj.exists():
-                return Response({'detail': 'Ошибка отписки. Сначала нужно '
-                                           'подписаться.'},
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {'detail': 'Ошибка отписки. Сначала нужно подписаться.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
             subscribe_obj.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 

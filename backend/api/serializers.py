@@ -97,9 +97,7 @@ class ChangeRecipeSerializer(serializers.ModelSerializer):
 
     def validate_name(self, value):
         if self.instance is None:
-            if Recipe.objects.filter(
-                    name__iexact=value
-            ).exists():
+            if Recipe.objects.filter(name__iexact=value).exists():
                 raise ValidationError('Такой рецепт уже есть')
         else:
             if Recipe.objects.filter(
