@@ -57,7 +57,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return user
 
     def validate_username(self, value):
-        value=value.lower()
+        value = value.lower()
         if value == 'me':
             raise ValidationError(
                 'Нельзя использовать это имя, выберите другое'
